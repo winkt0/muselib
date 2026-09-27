@@ -4,4 +4,19 @@ import { defineConfig } from "wxt";
 export default defineConfig({
     modules: ["@wxt-dev/module-react"],
     srcDir: "src",
+    manifest: {
+        name: "muselib",
+        host_permissions: ["*://*/"],
+        description: "Music Library In The Browser",
+        permissions: ["scripting", "storage", "activeTab"],
+        version: "1.0",
+        browser_specific_settings: {
+            gecko: {
+                id: "extensionname@example.org",
+                data_collection_permissions: {
+                    required: ["none"],
+                },
+            },
+        },
+    },
 });

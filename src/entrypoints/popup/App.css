@@ -1,42 +1,65 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root {
+    color-scheme: light dark;
+    --ink: #1d2433;
+    --muted: #5b6475;
+    --accent: #2f5bd3;
+    --accent-ink: #ffffff;
+    --paper: #ffffff;
 }
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ink: #e8ebf2;
+        --muted: #a3abbb;
+        --accent: #7fa1ff;
+        --accent-ink: #0d1424;
+        --paper: #1b1f29;
+    }
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #54bc4ae0);
+body {
+    width: 280px;
+    margin: 0;
+    padding: 16px;
+    font:
+        14px/1.45 system-ui,
+        -apple-system,
+        "Segoe UI",
+        sans-serif;
+    color: var(--ink);
+    background: var(--paper);
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+h1 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 12px;
 }
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button {
+    width: 100%;
+    padding: 9px 12px;
+    border: 0;
+    border-radius: 6px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--accent-ink);
+    background: var(--accent);
+    cursor: pointer;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+button:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
-
-.card {
-  padding: 2em;
+button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }
-
-.read-the-docs {
-  color: #888;
+progress {
+    width: 100%;
+    margin-top: 12px;
+    accent-color: var(--accent);
+}
+#status {
+    margin: 10px 0 0;
+    color: var(--muted);
+}
+#status:empty {
+    display: none;
 }

@@ -7,7 +7,6 @@ export default defineBackground(() => {
     const runningTabs = new Set<number>();
 
     browser.runtime.onMessage.addListener((msg: ExportRequest, _sender, sendResponse) => {
-        console.log("export playlist called!");
         if (msg?.type !== "export-playlist") return false;
         exportSpotifyPlaylist(msg.tabId, msg.tabUrl).then(sendResponse);
         return true; // keep the channel open for the async response

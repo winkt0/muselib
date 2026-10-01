@@ -42,8 +42,6 @@ export async function harvestPlaylistInPage(sel: SpotifySelectors, opts: Harvest
     const ALBUM_RE = /\/album\/([A-Za-z0-9]{22})/;
     const DURATION_RE = /^(?:(\d+):)?(\d{1,2}):(\d{2})$/;
 
-    const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
-
     const queryFirst = <T extends Element>(root: ParentNode, candidates: string[]): T | null => {
         for (const s of candidates) {
             const el = root.querySelector<T>(s);
@@ -207,7 +205,7 @@ export async function harvestPlaylistInPage(sel: SpotifySelectors, opts: Harvest
             tracks: [...tracks.values()],
         };
         // No listener (e.g. popup closed) is fine; swallow the rejection.
-        browser.runtime.sendMessage(msg).catch(() => {});
+        (globalThis as any).browser.runtime.sendMessage(msg).catch(() => {});
     };
 
     const isDone = () => expectedCount !== null && accounted() >= expectedCount;

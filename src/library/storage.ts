@@ -1,10 +1,16 @@
 import { storage } from "#imports";
 import type { EntrySource, HarvestedTrack, LibraryEntry } from "../utils/types";
 
-interface LibraryState {
+export interface LibraryState {
     version: 1;
     entries: Record<string, LibraryEntry>;
 }
+
+const EMPTY_LIBRARY: LibraryState = { version: 1, entries: {} };
+
+export const libraryStorage = storage.defineItem<LibraryState>("local:muselib:state", {
+    fallback: EMPTY_LIBRARY,
+});
 
 export interface MergeSummary {
     /** Entries created by this merge. */
@@ -23,15 +29,8 @@ function withLibraryLock<T>(fn: () => Promise<T>): Promise<T> {
     return run;
 }
 
-async function readState(): Promise<LibraryState> {
-    const stored = await storage.getItem<LibraryState>("local:muselib:state", {
-        fallback: { version: 1, entries: {} },
-    });
-    return stored;
-}
-
 async function writeState(state: LibraryState): Promise<void> {
-    await storage.setItem("local:muselib:state", state);
+    await libraryStorage.setValue(state);
 }
 /**
  * Adds harvested tracks to the library. A track already in the library
@@ -42,7 +41,7 @@ export function mergeIntoLibrary(
     source: Omit<EntrySource, "savedAt">,
 ): Promise<MergeSummary> {
     return withLibraryLock(async () => {
-        const state = await readState();
+        const state = await libraryStorage.getValue();
         const now = new Date().toISOString();
 
         const bySpotifyId = new Map<string, LibraryEntry>();
@@ -66,6 +65,9 @@ export function mergeIntoLibrary(
                 continue;
             }
 
+            let nextOrder =
+                Object.values(state.entries).reduce((max, e) => Math.max(max, e.custom_order_index ?? 0), 0) + 1;
+
             const entry: LibraryEntry = {
                 id: crypto.randomUUID(),
                 title: track.title,
@@ -75,6 +77,7 @@ export function mergeIntoLibrary(
                 externalIds: { spotify: track.spotifyId },
                 resolveStatus: "pending",
                 addedAt: now,
+                custom_order_index: nextOrder,
                 sources: [{ ...source, savedAt: now }],
             };
             state.entries[entry.id] = entry;

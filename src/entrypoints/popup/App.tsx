@@ -1,5 +1,5 @@
 import { parseSpotifyPlaylistUrl } from "@/spotify/selectors";
-import type { ExportResult, HarvestedTrack, HarvestProgress } from "@/types";
+import type { ExportResult, HarvestedTrack, HarvestProgress } from "@/utils/types";
 import { useState } from "react";
 import "./App.css";
 

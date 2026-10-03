@@ -1,7 +1,7 @@
 import { mergeIntoLibrary } from "@/library/storage";
 import { DEFAULT_HARVEST_OPTIONS, harvestPlaylistInPage } from "@/spotify/harvestPlaylist";
 import { parseSpotifyPlaylistUrl, SPOTIFY_SELECTORS } from "@/spotify/selectors";
-import type { ExportRequest, ExportResult, HarvestResult } from "@/types";
+import type { ExportRequest, ExportResult, HarvestResult } from "@/utils/types";
 
 export default defineBackground(() => {
     const runningTabs = new Set<number>();

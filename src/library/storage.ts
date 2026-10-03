@@ -1,5 +1,5 @@
 import { storage } from "#imports";
-import type { EntrySource, HarvestedTrack, LibraryEntry } from "../types";
+import type { EntrySource, HarvestedTrack, LibraryEntry } from "../utils/types";
 
 interface LibraryState {
     version: 1;

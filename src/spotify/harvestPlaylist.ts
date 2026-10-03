@@ -1,4 +1,4 @@
-import type { HarvestedTrack, HarvestProgress, HarvestResult } from "../types";
+import type { HarvestedTrack, HarvestProgress, HarvestResult } from "../utils/types";
 import type { SpotifySelectors } from "./selectors";
 
 export interface HarvestOptions {

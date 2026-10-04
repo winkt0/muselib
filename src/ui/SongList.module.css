@@ -1,0 +1,551 @@
+.root {
+    --sl-surface: #ffffff;
+    --sl-ink: #1b2130;
+    --sl-muted: #687083;
+    --sl-line: #e2e5eb;
+    --sl-hover: #f2f4f7;
+    --sl-selected: #e8edf7;
+    --sl-accent: #c4302b; /* the "go to YouTube" action */
+    --sl-danger: #b42318;
+    --sl-danger-ink: #ffffff;
+
+    container-type: inline-size;
+    color: var(--sl-ink);
+    background: var(--sl-surface);
+    font:
+        14px/1.4 system-ui,
+        -apple-system,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-color-scheme: dark) {
+    .root {
+        --sl-surface: #171a21;
+        --sl-ink: #e7e9ee;
+        --sl-muted: #9aa1b0;
+        --sl-line: #2a2f3a;
+        --sl-hover: #20242d;
+        --sl-selected: #232a39;
+        --sl-accent: #ff6b5f;
+        --sl-danger: #f04438;
+        --sl-danger-ink: #ffffff;
+    }
+}
+
+.root button {
+    font: inherit;
+}
+
+.root button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.root :focus-visible {
+    outline: 2px solid var(--sl-ink);
+    outline-offset: 1px;
+}
+
+/* --- Sticky top: heading, actions, search, sorting, column header --------- */
+
+.top {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--sl-surface);
+}
+
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+    padding: 14px 16px 10px;
+}
+
+.titleRow {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.heading {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.count,
+.message {
+    color: var(--sl-muted);
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-inline-start: auto;
+}
+
+.action,
+.dangerSolid,
+.segment,
+.direction,
+.inlineButton {
+    border: 0;
+    cursor: pointer;
+}
+
+.action {
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--sl-ink);
+    background: var(--sl-hover);
+}
+
+.action:hover:not(:disabled) {
+    background: var(--sl-line);
+}
+
+.dangerText {
+    color: var(--sl-danger);
+}
+
+.dangerSolid {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sl-danger-ink);
+    background: var(--sl-danger);
+}
+
+.confirm {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+    margin: 0 12px 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--sl-danger);
+    border-radius: 8px;
+}
+
+.confirmText {
+    margin: 0;
+    font-weight: 600;
+}
+
+.confirmButtons {
+    display: flex;
+    gap: 6px;
+}
+
+.search {
+    position: relative;
+    margin: 0 16px 10px;
+}
+
+.searchFieldIcon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    width: 15px;
+    height: 15px;
+    transform: translateY(-50%);
+    color: var(--sl-muted);
+    pointer-events: none;
+}
+
+.searchInput {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 7px 10px 7px 32px;
+    border: 1px solid var(--sl-line);
+    border-radius: 8px;
+    font: inherit;
+    color: var(--sl-ink);
+    background: var(--sl-surface);
+}
+
+.searchInput::placeholder {
+    color: var(--sl-muted);
+}
+
+.searchInput:focus-visible {
+    outline: 2px solid var(--sl-ink);
+    outline-offset: -1px;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    padding: 0 16px 10px;
+}
+
+.segmented {
+    display: inline-flex;
+    padding: 2px;
+    border-radius: 8px;
+    background: var(--sl-hover);
+}
+
+.segment,
+.direction {
+    font-size: 13px;
+    color: var(--sl-muted);
+    background: transparent;
+}
+
+.segment {
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.segment[aria-pressed="true"] {
+    color: var(--sl-ink);
+    font-weight: 600;
+    background: var(--sl-surface);
+    box-shadow: 0 0 0 1px var(--sl-line);
+}
+
+.direction {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 6px;
+    border-radius: 6px;
+}
+
+.direction:hover,
+.segment:hover {
+    color: var(--sl-ink);
+}
+
+.directionIcon {
+    width: 14px;
+    height: 14px;
+    transition: transform 150ms ease;
+}
+
+.directionIcon[data-dir="asc"] {
+    transform: rotate(180deg);
+}
+
+/* --- Grid shared by the column header and every row ------------------------
+   check | # | title | album | added | length | delete                          */
+
+.columns,
+.item {
+    display: grid;
+    grid-template-columns: 2.25rem 2rem minmax(0, 3fr) minmax(0, 2fr) 6.5rem 4rem 2.25rem;
+    align-items: center;
+    column-gap: 10px;
+    margin-inline: 4px;
+    padding-inline: 4px;
+}
+
+.columns {
+    min-height: 36px;
+    border-bottom: 1px solid var(--sl-line);
+    font-size: 12px;
+    color: var(--sl-muted);
+}
+
+.columnLabels,
+.link {
+    grid-column: 2 / -2;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-items: center;
+}
+
+.selectionBar {
+    grid-column: 2 / -1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--sl-ink);
+}
+
+.selectionCount {
+    margin-inline-end: auto;
+    font-weight: 600;
+}
+
+.check {
+    display: grid;
+    place-items: center;
+    align-self: stretch;
+    cursor: pointer;
+}
+
+.check input {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    accent-color: var(--sl-ink);
+    cursor: pointer;
+}
+
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0 16px;
+}
+
+.item {
+    min-height: 52px;
+    border-radius: 6px;
+    /* Lets the browser skip rendering off-screen rows in large libraries. */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 52px;
+}
+
+.item:hover {
+    background: var(--sl-hover);
+}
+
+.item[data-selected] {
+    background: var(--sl-selected);
+}
+
+.link {
+    position: relative;
+    align-self: stretch;
+    padding-block: 6px;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.link:focus-visible {
+    outline-offset: -2px;
+}
+
+.colIndex {
+    position: relative;
+    justify-self: end;
+    min-width: 1.25rem;
+    text-align: right;
+    color: var(--sl-muted);
+}
+
+/* Like the play button that replaces the track number in music players. */
+.searchIcon {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    transform: translateY(-50%);
+    color: var(--sl-accent);
+    opacity: 0;
+}
+
+.link:hover .number,
+.link:focus-visible .number {
+    opacity: 0;
+}
+
+.link:hover .searchIcon,
+.link:focus-visible .searchIcon {
+    opacity: 1;
+}
+
+.titleCell {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.title,
+.artists,
+.colAlbum {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.title {
+    font-weight: 600;
+}
+
+.link:hover .title {
+    color: var(--sl-accent);
+}
+
+.artists,
+.link .colAlbum,
+.link .colAdded {
+    font-size: 13px;
+    color: var(--sl-muted);
+}
+
+.colDuration {
+    justify-self: end;
+    color: var(--sl-muted);
+}
+
+.deleteButton {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    justify-self: center;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    color: var(--sl-muted);
+    background: transparent;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.deleteButton svg {
+    width: 16px;
+    height: 16px;
+}
+
+.item:hover .deleteButton,
+.item:focus-within .deleteButton {
+    opacity: 1;
+}
+
+.deleteButton:hover:not(:disabled) {
+    color: var(--sl-danger);
+    background: var(--sl-line);
+}
+
+@media (hover: none) {
+    .deleteButton {
+        opacity: 1;
+    }
+}
+
+/* --- Messages and notices ---------------------------------------------- */
+
+.message {
+    margin: 0;
+    padding: 12px 16px 16px;
+    max-width: 60ch;
+}
+
+.inlineButton {
+    padding: 0;
+    color: var(--sl-ink);
+    background: none;
+    text-decoration: underline;
+}
+
+.noticeSlot {
+    position: sticky;
+    bottom: 0;
+    padding: 0 12px 12px;
+    pointer-events: none;
+}
+
+.notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 6px 6px 12px;
+    border-radius: 8px;
+    color: var(--sl-surface);
+    background: var(--sl-ink);
+    pointer-events: auto;
+}
+
+.noticeText {
+    margin-inline-end: auto;
+    overflow-wrap: anywhere;
+}
+
+.noticeButton,
+.noticeClose {
+    border: 0;
+    border-radius: 6px;
+    color: inherit;
+    background: transparent;
+    cursor: pointer;
+}
+
+.noticeButton {
+    padding: 4px 8px;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.noticeClose {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.noticeButton:hover,
+.noticeClose:hover {
+    background: color-mix(in srgb, var(--sl-surface) 15%, transparent);
+}
+
+.notice :focus-visible {
+    outline-color: var(--sl-surface);
+}
+
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* --- Narrower containers: drop columns the way player track lists do --- */
+
+@container (max-width: 640px) {
+    .columns,
+    .item {
+        grid-template-columns: 2.25rem 2rem minmax(0, 1fr) 6.5rem 3.75rem 2.25rem;
+    }
+    .colAlbum {
+        display: none;
+    }
+}
+
+@container (max-width: 460px) {
+    .columns,
+    .item {
+        grid-template-columns: 2rem minmax(0, 1fr) 3.75rem 2.25rem;
+        column-gap: 8px;
+    }
+    .colIndex,
+    .colAdded {
+        display: none;
+    }
+    .header {
+        padding-inline: 12px;
+    }
+    .search {
+        margin-inline: 12px;
+    }
+    .toolbar {
+        padding-inline: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .directionIcon {
+        transition: none;
+    }
+}

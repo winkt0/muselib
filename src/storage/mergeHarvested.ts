@@ -1,37 +1,13 @@
-import { storage } from "#imports";
-import type { EntrySource, HarvestedTrack, LibraryEntry } from "../utils/types";
+import type { EntrySource, HarvestedTrack, LibraryEntry } from "@/utils/types";
+import { readFromStorage, withLibraryLock, writeToStorage } from "./storage";
 
-export interface LibraryState {
-    version: 1;
-    entries: Record<string, LibraryEntry>;
-}
-
-const EMPTY_LIBRARY: LibraryState = { version: 1, entries: {} };
-
-export const libraryStorage = storage.defineItem<LibraryState>("local:muselib:state", {
-    fallback: EMPTY_LIBRARY,
-});
-
-export interface MergeSummary {
+interface MergeSummary {
     /** Entries created by this merge. */
     added: LibraryEntry[];
     /** Tracks that were already in the library (their source list was updated). */
     alreadyInLibrary: number;
 }
 
-// browser.storage has no transactions. All library writes go through the
-// background service worker, and this queue serializes them within it so two
-// overlapping read-modify-write cycles can't overwrite each other.
-let writeQueue: Promise<unknown> = Promise.resolve();
-function withLibraryLock<T>(fn: () => Promise<T>): Promise<T> {
-    const run = writeQueue.then(fn, fn);
-    writeQueue = run.catch(() => {});
-    return run;
-}
-
-async function writeState(state: LibraryState): Promise<void> {
-    await libraryStorage.setValue(state);
-}
 /**
  * Adds harvested tracks to the library. A track already in the library
  * (same Spotify ID, i.e. the same recording on Spotify) isn't duplicated
@@ -41,7 +17,7 @@ export function mergeIntoLibrary(
     source: Omit<EntrySource, "savedAt">,
 ): Promise<MergeSummary> {
     return withLibraryLock(async () => {
-        const state = await libraryStorage.getValue();
+        const state = await readFromStorage();
         const now = new Date().toISOString();
 
         const bySpotifyId = new Map<string, LibraryEntry>();
@@ -85,7 +61,7 @@ export function mergeIntoLibrary(
             added.push(entry);
         }
 
-        await writeState(state);
+        await writeToStorage(state);
         return { added, alreadyInLibrary };
     });
 }

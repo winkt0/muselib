@@ -1,8 +1,9 @@
 import { parseSpotifyPlaylistUrl } from "@/spotify/selectors";
 import { Harvester } from "@/ui/Harvester";
+import { SongList } from "@/ui/SongList";
 import "./App.css";
 
-function App() {
+function App({ variant = "popup" }: { variant?: "popup" | "page" }) {
     const [isHarvestable, setHarvestable] = useState(false);
     const [tabId, setTabId] = useState<number | null>(null);
     const [tabUrl, setTabUrl] = useState("");
@@ -16,7 +17,12 @@ function App() {
         setTabId(tab.id);
         setTabUrl(tab.url);
     });
-    return <>{isHarvestable ? <Harvester tabId={tabId!} tabUrl={tabUrl!}></Harvester> : null}</>;
+    return (
+        <>
+            {isHarvestable ? <Harvester tabId={tabId!} tabUrl={tabUrl!}></Harvester> : null}
+            {<SongList variant={variant}></SongList>}
+        </>
+    );
 }
 
 export default App;

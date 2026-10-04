@@ -13,6 +13,7 @@ export interface LibraryEntry {
     /** Status of MusicBrainz recording resolution. */
     resolveStatus: "pending" | "resolved" | "not_found";
     addedAt: string; // ISO 8601
+    custom_order_index: number;
     sources: EntrySource[];
 }
 

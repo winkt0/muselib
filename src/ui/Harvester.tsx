@@ -65,13 +65,6 @@ export function Harvester({ tabId, tabUrl }: Props) {
             <p role="status" aria-live="polite">
                 {status}
             </p>
-            <ul>
-                {harvestedTracks.map(track => (
-                    <li>
-                        [{track.position}/{maxNumSongs}] {track.artists} - {track.title}
-                    </li>
-                ))}
-            </ul>
         </>
     );
 }

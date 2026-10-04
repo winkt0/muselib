@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" width="250" height="250" xmlns:c2pa="http://c2pa.org/manifest">
+  <defs>
+    <clipPath id="beam-shape">
+      <path d="M78 52 L222 22 V64 L78 94 Z"/>
+    </clipPath>
+    <clipPath id="head-shape">
+      <ellipse cx="66"  cy="190" rx="36" ry="27" transform="rotate(-22 66 190)"/>
+      <ellipse cx="186" cy="160" rx="36" ry="27" transform="rotate(-22 186 160)"/>
+    </clipPath>
+  </defs>
+
+  <rect x="78"  y="60" width="22" height="125" fill="#464545"/>
+  <rect x="91"  y="60" width="9"  height="125" fill="#464545" opacity="0.2"/>
+  <rect x="200" y="30" width="22" height="125" fill="#464545"/>
+  <rect x="213" y="30" width="9"  height="125" fill="#464545" opacity="0.2"/>
+
+  <g clip-path="url(#beam-shape)">
+    <rect x="70" y="0" width="160" height="110" fill="#464545"/>
+    <path d="M70 84 L230 50 V110 H70 Z" fill="#000" opacity="0.2"/>
+  </g>
+
+
+  <g clip-path="url(#head-shape)">
+    <rect x="0" y="100" width="250" height="150" fill="#687083"/>
+    <ellipse cx="74"  cy="200" rx="36" ry="27" transform="rotate(-22 74 200)"  fill="#000" opacity="0.2"/>
+    <ellipse cx="194" cy="170" rx="36" ry="27" transform="rotate(-22 194 170)" fill="#000" opacity="0.2"/>
+    <ellipse cx="62"  cy="185" rx="34" ry="24" transform="rotate(-22 62 185)"  fill="#687083"/>
+    <ellipse cx="182" cy="155" rx="34" ry="24" transform="rotate(-22 182 155)" fill="#687083"/>
+  </g>
+
+  <ellipse cx="52"  cy="178" rx="10" ry="6" transform="rotate(-22 52 178)"  fill="#fee7b3"/>
+  <ellipse cx="172" cy="148" rx="10" ry="6" transform="rotate(-22 172 148)" fill="#fee7b3"/>
+</svg>

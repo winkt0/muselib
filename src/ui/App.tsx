@@ -1,4 +1,4 @@
-import { parseSpotifyPlaylistUrl } from "@/spotify/selectors";
+import { parseSpotifyLikedSongs, parseSpotifyPlaylistUrl } from "@/spotify/selectors";
 import { Harvester } from "@/ui/Harvester";
 import { SongList } from "@/ui/SongList";
 import "./App.css";
@@ -10,7 +10,7 @@ function App({ variant = "popup" }: { variant?: "popup" | "page" }) {
 
     browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
         const tab = tabs[0];
-        if (!tab?.id || !tab.url || !parseSpotifyPlaylistUrl(tab.url)) {
+        if (!tab?.id || !tab.url || !(parseSpotifyPlaylistUrl(tab.url) || parseSpotifyLikedSongs(tab.url))) {
             return;
         }
         setHarvestable(true);

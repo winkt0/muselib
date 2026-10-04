@@ -33,3 +33,9 @@ export function parseSpotifyPlaylistUrl(url: string | undefined): string | null 
     );
     return match ? match[1]! : null;
 }
+
+export function parseSpotifyLikedSongs(url: string | undefined): string | null {
+    if (!url) return null;
+    const match = url.match(/^https:\/\/open\.spotify\.com\/(?:intl-[A-Za-z-]+\/)?collection\/tracks(?:[/?#]|$)/);
+    return match ? match[0]! : null;
+}

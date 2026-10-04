@@ -1,5 +1,5 @@
 import { DEFAULT_HARVEST_OPTIONS, harvestPlaylistInPage } from "@/spotify/harvestPlaylist";
-import { parseSpotifyPlaylistUrl, SPOTIFY_SELECTORS } from "@/spotify/selectors";
+import { parseSpotifyLikedSongs, parseSpotifyPlaylistUrl, SPOTIFY_SELECTORS } from "@/spotify/selectors";
 import { mergeIntoLibrary } from "@/storage/mergeHarvested";
 import type { ExportRequest, ExportResult, HarvestResult } from "@/utils/types";
 
@@ -14,11 +14,12 @@ export default defineBackground(() => {
 
     async function exportSpotifyPlaylist(tabId: number, tabUrl: string): Promise<ExportResult> {
         const playlistId = parseSpotifyPlaylistUrl(tabUrl);
-        if (!playlistId) {
+        const likedSongsUrl = parseSpotifyLikedSongs(tabUrl);
+        if (!(playlistId || likedSongsUrl)) {
             return {
                 ok: false,
                 reason: "not-a-playlist",
-                message: "Open a playlist on open.spotify.com to save its songs.",
+                message: "Open a playlist to save its songs.",
             };
         }
 
@@ -55,8 +56,11 @@ export default defineBackground(() => {
                 return { ok: false, reason: "harvest-failed", message: harvest.error };
             }
 
+            const saveUrl = playlistId
+                ? `https://open.spotify.com/playlist/${playlistId}`
+                : `https://open.spotify.com/collection/tracks`;
             const { added, alreadyInLibrary } = await mergeIntoLibrary(harvest.tracks, {
-                url: `https://open.spotify.com/playlist/${playlistId}`,
+                url: saveUrl,
                 context: harvest.playlistName ? `Spotify playlist: ${harvest.playlistName}` : "Spotify playlist",
             });
 

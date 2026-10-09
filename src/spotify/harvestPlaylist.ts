@@ -131,11 +131,11 @@ export async function harvestPlaylistInPage(sel: SpotifySelectors, opts: Harvest
     const episodes = new Set<number>();
     const fallbackIds = new Set<string>();
     const FALLBACK_OFFSET = 1_000_000;
-    const accounted = () => tracks.size + localOrUnavailable.size + episodes.size;
+    var latestHandledPosition = -1;
 
     /** Reads all currently rendered rows. Returns how many new rows were accounted for. */
     const collectVisible = (): number => {
-        const before = accounted();
+        const before = latestHandledPosition;
         const rows = queryAll(grid, sel.trackRow);
         rows.forEach(row => {
             const links = Array.from(row.querySelectorAll<HTMLAnchorElement>("a[href]"));
@@ -154,7 +154,13 @@ export async function harvestPlaylistInPage(sel: SpotifySelectors, opts: Harvest
                 fallbackIds.add(id);
                 position = FALLBACK_OFFSET + fallbackIds.size;
             }
-            if (tracks.has(position) || localOrUnavailable.has(position) || episodes.has(position)) return;
+            if (
+                position <= latestHandledPosition ||
+                tracks.has(position) ||
+                localOrUnavailable.has(position) ||
+                episodes.has(position)
+            )
+                return;
 
             if (!trackLink) {
                 if (links.some(a => EPISODE_RE.test(a.href))) {
@@ -169,7 +175,10 @@ export async function harvestPlaylistInPage(sel: SpotifySelectors, opts: Harvest
 
             const spotifyId = trackLink.href.match(TRACK_RE)![1]!;
             const title = (trackLink.textContent ?? "").trim();
-            if (!title) return; // still rendering
+            if (!title) {
+                localOrUnavailable.add(position);
+                return;
+            }
 
             const artists: string[] = [];
             const seenArtists = new Set<string>();
@@ -191,8 +200,9 @@ export async function harvestPlaylistInPage(sel: SpotifySelectors, opts: Harvest
                 album: albumLink?.textContent?.trim() || undefined,
                 durationMs: parseDuration(row),
             });
+            latestHandledPosition = position;
         });
-        return accounted() - before;
+        return latestHandledPosition - before;
     };
 
     const reportProgress = (pass: number, paused = false) => {
@@ -208,7 +218,7 @@ export async function harvestPlaylistInPage(sel: SpotifySelectors, opts: Harvest
         (globalThis as any).browser.runtime.sendMessage(msg).catch(() => {});
     };
 
-    const isDone = () => expectedCount !== null && accounted() >= expectedCount;
+    const isDone = () => expectedCount !== null && latestHandledPosition >= expectedCount;
 
     // Scroll through the list
 

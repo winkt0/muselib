@@ -1,11 +1,12 @@
 import { useLibrary } from "@/hooks/useLibrary";
 import { deleteEntries, restoreEntries } from "@/storage/storage";
 import { downloadLibraryExport } from "@/utils/exportLibrary";
+import { importLibraryFile } from "@/utils/importLibrary";
 import { openLibraryTab } from "@/utils/openLibraryTab";
 import { matchesSearch, parseSearchQuery, songSearchKey } from "@/utils/searchSongs";
 import { DEFAULT_DIRECTION, sortSongs, type SortDirection, type SortKey } from "@/utils/sortSongs";
 import type { LibraryEntry } from "@/utils/types";
-import { useCallback, useDeferredValue, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useId, useMemo, useRef, useState, type ChangeEvent } from "react";
 import styles from "./SongList.module.css";
 import { SongRow } from "./SongRow";
 
@@ -161,6 +162,29 @@ export function SongList({ variant = "page" }: SongListProps) {
 
     // --- Other actions -----------------------------------------------------
 
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const importJson = async (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        event.target.value = ""; // so choosing the same file again still fires onChange
+        if (!file) return;
+        setBusy(true);
+        try {
+            const { imported, duplicates, invalid } = await importLibraryFile(file);
+            const parts =
+                imported === 0 && duplicates > 0
+                    ? [`All ${songs(duplicates)} in this file are already in your library.`]
+                    : [`Imported ${songs(imported)}.`];
+            if (imported > 0 && duplicates > 0) parts.push(`Skipped ${songs(duplicates)} already in your library.`);
+            if (invalid > 0) parts.push(`Skipped ${invalid} invalid ${invalid === 1 ? "entry" : "entries"}.`);
+            setNotice({ key: Date.now(), text: parts.join(" ") });
+        } catch (err) {
+            setNotice({ key: Date.now(), text: `Couldn't import: ${errorText(err)}` });
+        } finally {
+            setBusy(false);
+        }
+    };
+
     const exportJson = () => {
         try {
             const filename = downloadLibraryExport(entries);
@@ -212,6 +236,21 @@ export function SongList({ variant = "page" }: SongListProps) {
                         <span className={styles.count}>{countText}</span>
                     </div>
                     <div className={styles.actions}>
+                        <button
+                            type="button"
+                            className={styles.action}
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={busy}
+                        >
+                            Import JSON
+                        </button>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept=".json,application/json"
+                            hidden
+                            onChange={importJson}
+                        />
                         <button type="button" className={styles.action} onClick={exportJson} disabled={total === 0}>
                             Export JSON
                         </button>

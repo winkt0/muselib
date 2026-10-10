@@ -12,7 +12,7 @@ export default defineConfig({
         name: "muselib",
         host_permissions: ["*://*/"],
         description: "Music Library In The Browser",
-        permissions: ["scripting", "storage", "activeTab"],
+        permissions: ["scripting", "storage", "unlimitedStorage", "activeTab"],
         version: "1.0",
         browser_specific_settings: {
             gecko: {

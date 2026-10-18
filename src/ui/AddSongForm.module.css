@@ -1,0 +1,225 @@
+.form {
+    --sf-surface: #ffffff;
+    --sf-ink: #1b2130;
+    --sf-muted: #687083;
+    --sf-line: #d5d9e1;
+    --sf-hover: #f2f4f7;
+    --sf-error: #b42318;
+
+    container-type: inline-size;
+    display: grid;
+    gap: 14px;
+    padding: 16px;
+    color: var(--sf-ink);
+    background: var(--sf-surface);
+    font:
+        14px/1.4 system-ui,
+        -apple-system,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    .form {
+        --sf-surface: #171a21;
+        --sf-ink: #e7e9ee;
+        --sf-muted: #9aa1b0;
+        --sf-line: #343a47;
+        --sf-hover: #20242d;
+        --sf-error: #ff8a80;
+    }
+}
+
+.form button {
+    font: inherit;
+    cursor: pointer;
+}
+
+.form :focus-visible {
+    outline: 2px solid var(--sf-ink);
+    outline-offset: 1px;
+}
+
+.heading {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.field {
+    display: grid;
+    gap: 5px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.label {
+    padding: 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.optional {
+    font-weight: 400;
+    color: var(--sf-muted);
+}
+
+.input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid var(--sf-line);
+    border-radius: 8px;
+    font: inherit;
+    color: var(--sf-ink);
+    background: var(--sf-surface);
+}
+
+.input::placeholder {
+    color: var(--sf-muted);
+    opacity: 0.7;
+}
+
+.input:focus-visible {
+    outline-offset: -1px;
+}
+
+.input[aria-invalid="true"] {
+    border-color: var(--sf-error);
+    box-shadow: 0 0 0 1px var(--sf-error);
+}
+
+.lengthInput {
+    font-variant-numeric: tabular-nums;
+}
+
+.error {
+    margin: 0;
+    font-size: 13px;
+    color: var(--sf-error);
+}
+
+.artistRow {
+    display: flex;
+    gap: 6px;
+}
+
+.iconButton {
+    flex: none;
+    width: 34px;
+    border: 0;
+    border-radius: 8px;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--sf-muted);
+    background: transparent;
+}
+
+.iconButton:hover {
+    color: var(--sf-ink);
+    background: var(--sf-hover);
+}
+
+.linkButton {
+    justify-self: start;
+    padding: 2px 0;
+    border: 0;
+    font-size: 13px;
+    color: var(--sf-ink);
+    background: none;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7rem;
+    gap: 5px 12px;
+    align-items: start;
+}
+
+.pair > .error {
+    grid-column: 1 / -1;
+}
+
+@container (max-width: 300px) {
+    .pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.ids {
+    padding: 10px 12px;
+    border: 1px solid var(--sf-line);
+    border-radius: 8px;
+}
+
+.idFields {
+    display: grid;
+    gap: 12px;
+    padding: 10px 0 4px;
+}
+
+.summary {
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.hint {
+    margin: 0;
+    font-size: 13px;
+    color: var(--sf-muted);
+}
+
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px 12px;
+}
+
+.status {
+    flex: 1 1 12rem;
+    margin: 0;
+    font-size: 13px;
+    color: var(--sf-muted);
+}
+
+.status:empty {
+    display: none;
+}
+
+.buttons {
+    display: flex;
+    gap: 6px;
+    margin-inline-start: auto;
+}
+
+.primary,
+.secondary {
+    padding: 7px 14px;
+    border: 0;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.primary {
+    color: var(--sf-surface);
+    background: var(--sf-ink);
+}
+
+.primary:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.secondary {
+    color: var(--sf-ink);
+    background: var(--sf-hover);
+}

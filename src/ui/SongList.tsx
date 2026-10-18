@@ -13,6 +13,7 @@ import { SongRow } from "./SongRow";
 export interface SongListProps {
     /** "popup" adds an "Open in tab" button and closes the popup when it's used. */
     variant?: "popup" | "page";
+    openAddSongForm: () => void;
 }
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
@@ -39,7 +40,7 @@ function directionLabel(key: SortKey, direction: SortDirection): string {
     return direction === "asc" ? "A to Z" : "Z to A";
 }
 
-export function SongList({ variant = "page" }: SongListProps) {
+export function SongList({ variant = "page", openAddSongForm }: SongListProps) {
     const library = useLibrary();
     const entries = library.status === "ready" ? library.entries : NO_ENTRIES;
 
@@ -236,6 +237,9 @@ export function SongList({ variant = "page" }: SongListProps) {
                         <span className={styles.count}>{countText}</span>
                     </div>
                     <div className={styles.actions}>
+                        <button type="button" className={styles.action} onClick={openAddSongForm}>
+                            Add Song Manually
+                        </button>
                         <button
                             type="button"
                             className={styles.action}

@@ -1,12 +1,14 @@
 import { parseSpotifyLikedSongs, parseSpotifyPlaylistUrl } from "@/spotify/selectors";
 import { Harvester } from "@/ui/Harvester";
 import { SongList } from "@/ui/SongList";
+import { AddSongForm } from "./AddSongForm";
 import "./App.css";
 
 function App({ variant = "popup" }: { variant?: "popup" | "page" }) {
     const [isHarvestable, setHarvestable] = useState(false);
     const [tabId, setTabId] = useState<number | null>(null);
     const [tabUrl, setTabUrl] = useState("");
+    const [showAddSongForm, setAddSongForm] = useState(false);
 
     browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
         const tab = tabs[0];
@@ -19,8 +21,14 @@ function App({ variant = "popup" }: { variant?: "popup" | "page" }) {
     });
     return (
         <>
-            {isHarvestable ? <Harvester tabId={tabId!} tabUrl={tabUrl!}></Harvester> : null}
-            {<SongList variant={variant}></SongList>}
+            {showAddSongForm ? (
+                <AddSongForm onAdded={entry => setAddSongForm(false)} onCancel={() => setAddSongForm(false)} />
+            ) : (
+                <>
+                    {isHarvestable ? <Harvester tabId={tabId!} tabUrl={tabUrl!}></Harvester> : null}
+                    {<SongList variant={variant} openAddSongForm={() => setAddSongForm(true)}></SongList>}
+                </>
+            )}
         </>
     );
 }
